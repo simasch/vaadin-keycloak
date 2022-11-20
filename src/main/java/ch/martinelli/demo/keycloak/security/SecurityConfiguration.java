@@ -1,4 +1,4 @@
-package com.example.application.security;
+package ch.martinelli.demo.keycloak.security;
 
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
 import org.springframework.context.annotation.Bean;

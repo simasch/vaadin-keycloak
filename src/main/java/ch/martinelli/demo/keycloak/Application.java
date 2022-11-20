@@ -1,4 +1,4 @@
-package com.example.application;
+package ch.martinelli.demo.keycloak;
 
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.page.AppShellConfigurator;

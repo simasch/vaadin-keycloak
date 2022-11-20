@@ -1,4 +1,4 @@
-package com.example.application.components.appnav;
+package ch.martinelli.demo.keycloak.components.appnav;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Tag;
