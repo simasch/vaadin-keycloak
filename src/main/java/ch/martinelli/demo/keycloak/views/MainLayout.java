@@ -112,7 +112,8 @@ public class MainLayout extends AppLayout {
 
             layout.add(userMenu);
         } else {
-            Button login = new Button("Sign in", event -> UI.getCurrent().getPage().setLocation("http://localhost:8081/auth "));
+            Button login = new Button("Sign in",
+                    event -> UI.getCurrent().getPage().setLocation("/user"));
             layout.add(login);
         }
 
