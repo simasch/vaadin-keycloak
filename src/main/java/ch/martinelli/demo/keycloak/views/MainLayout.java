@@ -2,7 +2,6 @@ package ch.martinelli.demo.keycloak.views;
 
 import ch.martinelli.demo.keycloak.components.appnav.AppNav;
 import ch.martinelli.demo.keycloak.components.appnav.AppNavItem;
-import ch.martinelli.demo.keycloak.security.AuthenticatedUser;
 import ch.martinelli.demo.keycloak.views.admin.AdminView;
 import ch.martinelli.demo.keycloak.views.index.IndexView;
 import ch.martinelli.demo.keycloak.views.user.UserView;
@@ -33,12 +32,10 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
  */
 public class MainLayout extends AppLayout {
 
-    private final AuthenticatedUser authenticatedUser;
     private final AccessAnnotationChecker accessChecker;
     private H2 viewTitle;
 
-    public MainLayout(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker) {
-        this.authenticatedUser = authenticatedUser;
+    public MainLayout(AccessAnnotationChecker accessChecker) {
         this.accessChecker = accessChecker;
 
         setPrimarySection(Section.DRAWER);
@@ -106,9 +103,7 @@ public class MainLayout extends AppLayout {
             div.getElement().getStyle().set("align-items", "center");
             div.getElement().getStyle().set("gap", "var(--lumo-space-s)");
             userName.add(div);
-            userName.getSubMenu().addItem("Sign out", e -> {
-                authenticatedUser.logout();
-            });
+            userName.getSubMenu().addItem("Sign out", e -> UI.getCurrent().getPage().setLocation("/logout"));
 
             layout.add(userMenu);
         } else {
