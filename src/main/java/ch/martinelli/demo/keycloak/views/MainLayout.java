@@ -3,8 +3,9 @@ package ch.martinelli.demo.keycloak.views;
 import ch.martinelli.demo.keycloak.components.appnav.AppNav;
 import ch.martinelli.demo.keycloak.components.appnav.AppNavItem;
 import ch.martinelli.demo.keycloak.security.AuthenticatedUser;
-import ch.martinelli.demo.keycloak.views.about.AboutView;
-import ch.martinelli.demo.keycloak.views.helloworld.HelloWorldView;
+import ch.martinelli.demo.keycloak.views.admin.AdminView;
+import ch.martinelli.demo.keycloak.views.index.IndexView;
+import ch.martinelli.demo.keycloak.views.user.UserView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
@@ -23,16 +24,17 @@ import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 
 /**
  * The main view is a top-level placeholder for other views.
  */
 public class MainLayout extends AppLayout {
 
+    private final AuthenticatedUser authenticatedUser;
+    private final AccessAnnotationChecker accessChecker;
     private H2 viewTitle;
-
-    private AuthenticatedUser authenticatedUser;
-    private AccessAnnotationChecker accessChecker;
 
     public MainLayout(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker) {
         this.authenticatedUser = authenticatedUser;
@@ -68,13 +70,14 @@ public class MainLayout extends AppLayout {
         // For documentation, visit https://github.com/vaadin/vcf-nav#readme
         AppNav nav = new AppNav();
 
-        if (accessChecker.hasAccess(HelloWorldView.class)) {
-            nav.addItem(new AppNavItem("Hello World", HelloWorldView.class, "la la-globe"));
-
+        if (accessChecker.hasAccess(IndexView.class)) {
+            nav.addItem(new AppNavItem("Index", IndexView.class, "la la-globe"));
         }
-        if (accessChecker.hasAccess(AboutView.class)) {
-            nav.addItem(new AppNavItem("About", AboutView.class, "la la-file"));
-
+        if (accessChecker.hasAccess(UserView.class)) {
+            nav.addItem(new AppNavItem("User", UserView.class, "la la-file"));
+        }
+        if (accessChecker.hasAccess(AdminView.class)) {
+            nav.addItem(new AppNavItem("Admin", AdminView.class, "la la-users"));
         }
 
         return nav;
@@ -84,7 +87,8 @@ public class MainLayout extends AppLayout {
         Footer layout = new Footer();
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.isAuthenticated()) {
+        if (authentication instanceof OAuth2AuthenticationToken token
+                && token.getPrincipal() instanceof DefaultOidcUser oidcUser) {
             Avatar avatar = new Avatar(authentication.getName());
             avatar.setThemeName("xsmall");
             avatar.getElement().setAttribute("tabindex", "-1");
@@ -95,7 +99,7 @@ public class MainLayout extends AppLayout {
             MenuItem userName = userMenu.addItem("");
             Div div = new Div();
             div.add(avatar);
-            div.add(authentication.getName());
+            div.add(oidcUser.getFullName());
             div.add(new Icon("lumo", "dropdown"));
             div.getElement().getStyle().set("display", "flex");
             div.getElement().getStyle().set("align-items", "center");
@@ -107,7 +111,7 @@ public class MainLayout extends AppLayout {
 
             layout.add(userMenu);
         } else {
-            Anchor loginLink = new Anchor("login", "Sign in");
+            Anchor loginLink = new Anchor("/auth", "Sign in");
             layout.add(loginLink);
         }
 

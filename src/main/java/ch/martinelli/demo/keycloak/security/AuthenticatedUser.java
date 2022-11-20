@@ -27,9 +27,9 @@ public class AuthenticatedUser {
     }
 
     public void logout() {
-        UI.getCurrent().getPage().setLocation(SecurityConfiguration.LOGOUT_URL);
         logoutHandler.logout(VaadinServletRequest.getCurrent().getHttpServletRequest(), null,
                 SecurityContextHolder.getContext().getAuthentication());
+        UI.getCurrent().getPage().setLocation(SecurityConfiguration.LOGOUT_URL);
     }
 
 }
