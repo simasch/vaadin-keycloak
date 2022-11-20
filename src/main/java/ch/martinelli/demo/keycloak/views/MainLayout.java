@@ -6,11 +6,12 @@ import ch.martinelli.demo.keycloak.security.AuthenticatedUser;
 import ch.martinelli.demo.keycloak.views.admin.AdminView;
 import ch.martinelli.demo.keycloak.views.index.IndexView;
 import ch.martinelli.demo.keycloak.views.user.UserView;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.MenuItem;
-import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
@@ -111,8 +112,8 @@ public class MainLayout extends AppLayout {
 
             layout.add(userMenu);
         } else {
-            Anchor loginLink = new Anchor("/auth", "Sign in");
-            layout.add(loginLink);
+            Button login = new Button("Sign in", event -> UI.getCurrent().getPage().setLocation("http://localhost:8081/auth "));
+            layout.add(login);
         }
 
         return layout;
