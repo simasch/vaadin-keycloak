@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class KeycloakLogoutHandler implements LogoutHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(KeycloakLogoutHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(KeycloakLogoutHandler.class);
     private final RestTemplate restTemplate;
 
     public KeycloakLogoutHandler() {
@@ -38,9 +38,9 @@ public class KeycloakLogoutHandler implements LogoutHandler {
         ResponseEntity<String> logoutResponse = restTemplate.getForEntity(
                 builder.toUriString(), String.class);
         if (logoutResponse.getStatusCode().is2xxSuccessful()) {
-            logger.info("Successfully logged out from Keycloak");
+            LOGGER.debug("Successfully logged out from Keycloak");
         } else {
-            logger.error("Could not propagate logout to Keycloak");
+            LOGGER.error("Could not propagate logout to Keycloak");
         }
     }
 

@@ -2,6 +2,10 @@
 
 This project demonstrate the integration of Keycloak with Vaadin.
 
+## Start Keycloak
+
+    docker run -d -p 8180:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:20.0.1 start-dev
+
 ## Running the application
 
 The project is a standard Maven project. To run it from the command line,

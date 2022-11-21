@@ -23,8 +23,6 @@ import java.util.stream.Collectors;
 @Configuration
 public class SecurityConfiguration extends VaadinWebSecurity {
 
-    public static final String LOGOUT_URL = "/";
-
     private final KeycloakLogoutHandler keycloakLogoutHandler;
 
     public SecurityConfiguration(KeycloakLogoutHandler keycloakLogoutHandler) {
@@ -48,17 +46,13 @@ public class SecurityConfiguration extends VaadinWebSecurity {
                 if (userInfo.hasClaim("realm_access")) {
                     var realmAccess = userInfo.getClaimAsMap("realm_access");
                     var roles = (Collection<String>) realmAccess.get("roles");
-                    mappedAuthorities.addAll(generateAuthoritiesFromClaim(roles));
+                    mappedAuthorities.addAll(roles.stream()
+                            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
+                            .toList());
                 }
             }
             return mappedAuthorities;
         };
-    }
-
-    Collection<GrantedAuthority> generateAuthoritiesFromClaim(Collection<String> roles) {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
-                .collect(Collectors.toList());
     }
 
     @Override
